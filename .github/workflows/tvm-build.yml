@@ -21,7 +21,7 @@ jobs:
       - name: libtvmのソースコードをダウンロード
         run: |
           git config --global core.longpaths true
-          git clone --recursive https://github.com/apache/tvm c:\tvm
+          git clone --recursive https://github.com/apache/tvm
 
       - name: libtvmをビルド
         run: |
