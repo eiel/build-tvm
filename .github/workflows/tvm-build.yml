@@ -17,3 +17,14 @@ jobs:
 
       - name: CMakeの存在確認
         run: cmake --version
+
+      - name: libtvmのソースコードをダウンロード
+        run: git clone --recursive https://github.com/apache/tvm tvm
+
+      - name: libtvmをビルド
+        run: |
+          cd tvm
+          mkdir build
+          cd build
+          cmake ..
+          cmake --build . --config Release
