@@ -22,6 +22,19 @@ jobs:
         if: runner.os == 'Windows'
         run: git config --global core.longpaths true
 
+      - name: ccacheのインストール
+        run: |
+          choco install ccache
+          echo "CCACHE_DIR=${{ github.workspace }}/.ccache" >> $env:GITHUB_ENV
+
+      - name: ccacheのキャッシュを復元
+        uses: actions/cache@v3
+        with:
+          path: .ccache
+          key: ${{ runner.os }}-ccache-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-ccache-
+
       - name: libtvmのソースコードをダウンロード
         uses: actions/checkout@v4
         with:
