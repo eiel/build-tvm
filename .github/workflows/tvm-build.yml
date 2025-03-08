@@ -18,10 +18,15 @@ jobs:
       - name: CMakeの存在確認
         run: cmake --version
 
+      - name: Windows用の長いパス名を有効化
+        if: runner.os == 'Windows'
+        run: git config --global core.longpaths true
+
       - name: libtvmのソースコードをダウンロード
-        run: |
-          git config --global core.longpaths true
-          git clone --recursive https://github.com/apache/tvm
+        uses: actions/checkout@v4
+        with:
+          repository: apache/tvm
+          submodules: recursive
 
       - name: libtvmをビルド
         run: |
