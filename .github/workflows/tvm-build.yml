@@ -46,8 +46,8 @@ jobs:
             -DUSE_MICRO=OFF \
             -DUSE_CPP_RPC=OFF \
             -DUSE_GRAPH_EXECUTOR=ON \
-            -DUSE_GRAPH_EXECUTOR_DEBUG=ON \
-            -DUSE_PROFILER=ON \
+            -DUSE_GRAPH_EXECUTOR_DEBUG=OFF \
+            -DUSE_PROFILER=OFF \
             -DUSE_GTEST=OFF \
             -DUSE_LIBBACKTRACE=OFF \
             -DHIDE_PRIVATE_SYMBOLS=ON \
@@ -71,7 +71,7 @@ jobs:
             -DUSE_LIBTORCH=OFF \
             -DUSE_HWLOC=OFF \
             -DUSE_STACKVM=ON \
-            -DUSE_RELAY_DEBUG=ON \
+            -DUSE_RELAY_DEBUG=OFF \
             -DUSE_TENSORRT=OFF \
             -DUSE_VITIS_AI=OFF \
             -DUSE_ANTLR=OFF \
@@ -93,7 +93,7 @@ jobs:
             -DUSE_MICRO_EXECUTOR=OFF \
             -DUSE_ETHOSU=OFF \
             -DUSE_UNITY=OFF \
-            -DUSE_CCACHE=OFF \
+            -DUSE_CCACHE=ON \
             -DUSE_SANITIZER=OFF \
             -DUSE_COVERAGE=OFF \
             -DUSE_KALEIDOSCOPE=OFF \
@@ -113,7 +113,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_PREFIX=install \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-            -DCMAKE_VERBOSE_MAKEFILE=ON \
+            -DCMAKE_VERBOSE_MAKEFILE=OFF \
             -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
             -DCMAKE_CXX_STANDARD=17 \
             -DCMAKE_CXX_STANDARD_REQUIRED=ON \
