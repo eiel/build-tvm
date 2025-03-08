@@ -19,7 +19,9 @@ jobs:
         run: cmake --version
 
       - name: libtvmのソースコードをダウンロード
-        run: git clone --recursive https://github.com/apache/tvm tvm
+        run: |
+          git config --global core.longpaths true
+          git clone --recursive https://github.com/apache/tvm c:\tvm
 
       - name: libtvmをビルド
         run: |
