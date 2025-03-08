@@ -52,7 +52,7 @@ jobs:
           mkdir build
           cd build
           cmake .. \
-            -DUSE_LLVM=ON \
+            -DUSE_LLVM=OFF \
             -DUSE_CUDA=OFF \
             -DUSE_VULKAN=OFF \
             -DUSE_OPENGL=OFF \
