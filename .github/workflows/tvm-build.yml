@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: windows-2022
     steps:
-      - name: 確認
+      - name: カレントディレクトリの確認
         run: pwd
 
       - name: CMakeの存在確認
