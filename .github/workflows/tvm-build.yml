@@ -52,6 +52,7 @@ jobs:
           mkdir build
           cd build
           cmake .. \
+            -DUSE_SUMMARIZE=ON \
             -DUSE_CUDA=OFF \
             -DUSE_VULKAN=OFF \
             -DUSE_OPENGL=OFF \
