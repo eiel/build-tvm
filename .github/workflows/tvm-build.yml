@@ -52,7 +52,7 @@ jobs:
           mkdir build
           cd build
           cmake .. `
-            -DUSE_SUMMARIZE=ON `
+            -DSUMMARIZE=ON `
 
       - name: libtvmをビルド
         run: |
