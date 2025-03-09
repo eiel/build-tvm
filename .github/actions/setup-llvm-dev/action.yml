@@ -63,6 +63,9 @@ runs:
             $extractedFolder = Get-ChildItem -Path "$env:DOWNLOAD_DIR" -Directory | Where-Object { $_.Name -like "clang+llvm*" } | Select-Object -First 1
             Write-Host "Extracted folder path: $($extractedFolder.FullName)"
             
+            Write-Host "Contents of download directory:"
+            Get-ChildItem -Path "$env:DOWNLOAD_DIR" | Format-Table Name, Length, LastWriteTime
+
             # Copy files to installation directory
             Move-Item -Path "$($extractedFolder.FullName)\*" -Destination "$env:LLVM_DIR" -Force
             
