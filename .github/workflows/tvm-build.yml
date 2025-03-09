@@ -42,7 +42,7 @@ jobs:
 
       - name: LLVMをインストール
         run: |
-          choco install llvm --version=15.0.7 -y
+          choco install llvm -y
           echo "LLVM_PATH=C:\Program Files\LLVM" >> $env:GITHUB_ENV
           echo "C:\Program Files\LLVM\bin" >> $env:GITHUB_PATH
           
