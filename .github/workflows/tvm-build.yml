@@ -48,8 +48,10 @@ jobs:
 
       - name: Install LLVM
         uses: ./.github/actions/setup-llvm-dev
+        id: setup-llvm
         with:
-          llvm_version: "20.1.0"
+            llvm-version: "20.1.0"
+
       - name: libtvmのソースコードをダウンロード
         uses: actions/checkout@v4
         with:
