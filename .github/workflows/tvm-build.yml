@@ -44,7 +44,7 @@ jobs:
           pip install setuptools wheel numpy
 
       - name: Install LLVM
-        uses: ./.github/workflows/setup-llvm-dev
+        uses: ./.github/actions/setup-llvm-dev
         with:
           llvm_version: "20.1.0"
       - name: libtvmのソースコードをダウンロード
