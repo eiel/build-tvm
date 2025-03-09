@@ -43,13 +43,19 @@ runs:
 
         - name: Install 7zip
           shell: pwsh
-          run: choco install 7zip -y
+                run: choco install 7zip -y
 
         - name: Extract LLVM archive
           shell: pwsh
           run: |
-            cd "$env:DOWNLOAD_DIR"
-            7z x $env:LLVM_ARCHIVE
+              cd "$env:DOWNLOAD_DIR"
+              7z x $env:LLVM_ARCHIVE
+
+        - name: Extract tar file
+          shell: pwsh
+          run: |
+              cd "$env:DOWNLOAD_DIR"
+              tar -xf $env:LLVM_ARCHIVE.Replace('.xz', '')
 
         - name: Prepare installation directory
           shell: pwsh
