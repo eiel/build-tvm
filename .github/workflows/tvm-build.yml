@@ -40,27 +40,46 @@ jobs:
           python -m pip install --upgrade pip
           pip install setuptools wheel numpy
 
-      - name: LLVMをインストール
+      - name: LLVMをダウンロードしてインストール
         run: |
-          choco install llvm -y
+          $llvmVersion = "20.1.0"
+          $llvmUrl = "https://github.com/llvm/llvm-project/releases/download/llvmorg-$llvmVersion/clang+llvm-$llvmVersion-x86_64-pc-windows-msvc.tar.xz"
+          $llvmArchive = "llvm-$llvmVersion.tar.xz"
+          $llvmDir = "C:\Program Files\LLVM"
+          
+          # ダウンロードディレクトリを作成
+          New-Item -Path "${{ github.workspace }}\llvm-download" -ItemType Directory -Force
+          
+          # LLVMをダウンロード
+          Invoke-WebRequest -Uri $llvmUrl -OutFile "${{ github.workspace }}\llvm-download\$llvmArchive"
+          
+          # 解凍用に7zipをインストール
+          choco install 7zip -y
+          
+          # アーカイブを解凍
+          cd "${{ github.workspace }}\llvm-download"
+          7z x $llvmArchive
+          $extractedFolder = Get-ChildItem -Directory | Where-Object { $_.Name -like "clang+llvm*" } | Select-Object -First 1
+          
+          # LLVMディレクトリを作成
+          New-Item -Path "$llvmDir" -ItemType Directory -Force
+          
+          # ファイルをコピー
+          Copy-Item -Path "$extractedFolder\*" -Destination "$llvmDir" -Recurse -Force
+          
+          # 環境変数を設定
           echo "LLVM_PATH=C:\Program Files\LLVM" >> $env:GITHUB_ENV
           echo "C:\Program Files\LLVM\bin" >> $env:GITHUB_PATH
-          
-      - name: LLVMのbinディレクトリの内容を確認
-        run: |
-          echo "LLVMのbinディレクトリの内容一覧:"
-          Get-ChildItem -Path "C:\Program Files\LLVM\bin" | Format-Table Name, Length, LastWriteTime
-          
-          echo "`nllvm-configの確認:"
-          if (Test-Path "C:\Program Files\LLVM\bin\llvm-config.exe") {
-            echo "llvm-config.exeが存在します"
-            & "C:\Program Files\LLVM\bin\llvm-config.exe" --version
-          } else {
-            echo "llvm-config.exeが見つかりません"
-            echo "代替ファイルを探しています..."
-            Get-ChildItem -Path "C:\Program Files\LLVM\bin" -Filter "*config*" | Format-Table Name, Length
-          }
 
+          # LLVMのインストール確認とbinディレクトリの内容表示
+          Write-Host "LLVM installation verification:"
+          if (Test-Path "C:\Program Files\LLVM\bin") {
+            Write-Host "LLVM bin directory exists"
+            Write-Host "Contents of LLVM bin directory:"
+            Get-ChildItem -Path "C:\Program Files\LLVM\bin" | Format-Table Name, Length, LastWriteTime
+          } else {
+            Write-Host "LLVM bin directory does not exist!" -ForegroundColor Red
+          }
       - name: libtvmのソースコードをダウンロード
         uses: actions/checkout@v4
         with:
