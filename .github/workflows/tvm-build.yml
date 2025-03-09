@@ -33,7 +33,7 @@ jobs:
       - name: ccacheのキャッシュを復元
         uses: actions/cache@v3
         with:
-          path: .ccache
+          path: ${{ github.workspace }}/.ccache
           key: ${{ runner.os }}-ccache-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-ccache-
