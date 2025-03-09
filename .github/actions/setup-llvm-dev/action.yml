@@ -43,7 +43,7 @@ runs:
 
         - name: Install 7zip
           shell: pwsh
-                run: choco install 7zip -y
+          run: choco install 7zip -y
 
         - name: Extract LLVM archive
           shell: pwsh
