@@ -74,7 +74,7 @@ jobs:
           cd build
           cmake .. `
             -DSUMMARIZE=ON `
-            -DUSE_LLVM="C:\Program Files\LLVM\bin\llvm-config"
+            -DUSE_LLVM="C:/Program\ Files/LLVM/bin/llvm-config"
 
       - name: libtvmをビルド
         run: |
