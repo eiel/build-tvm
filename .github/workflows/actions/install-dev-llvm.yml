@@ -1,0 +1,85 @@
+name: 'Install LLVM Development Tools'
+description: 'Downloads and installs LLVM development tools on Windows'
+inputs:
+    llvm-version:
+        description: 'LLVM version to install'
+        required: false
+        default: '20.1.0'
+    installation-path:
+        description: 'Path where LLVM should be installed'
+        required: false
+        default: 'D:\lib\LLVM'
+outputs:
+    llvm-path:
+        description: 'Path where LLVM was installed'
+        value: ${{ steps.install-llvm.outputs.llvm_path }}
+runs:
+    using: "composite"
+    steps:
+        - id: setup-variables
+          shell: pwsh
+          name: Setup LLVM variables
+          run: |
+            $llvmVersion = "${{ inputs.llvm-version }}"
+            $llvmUrl = "https://github.com/llvm/llvm-project/releases/download/llvmorg-$llvmVersion/clang+llvm-$llvmVersion-x86_64-pc-windows-msvc.tar.xz"
+            $llvmArchive = "llvm-$llvmVersion.tar.xz"
+            $llvmDir = "${{ inputs.installation-path }}"
+            $downloadDir = "${{ github.workspace }}\llvm-download"
+            
+            echo "LLVM_VERSION=$llvmVersion" >> $env:GITHUB_ENV
+            echo "LLVM_URL=$llvmUrl" >> $env:GITHUB_ENV
+            echo "LLVM_ARCHIVE=$llvmArchive" >> $env:GITHUB_ENV
+            echo "LLVM_DIR=$llvmDir" >> $env:GITHUB_ENV
+            echo "DOWNLOAD_DIR=$downloadDir" >> $env:GITHUB_ENV
+
+        - name: Create download directory
+          shell: pwsh
+          run: New-Item -Path "$env:DOWNLOAD_DIR" -ItemType Directory -Force
+
+        - name: Download LLVM
+          shell: pwsh
+          run: |
+            Invoke-WebRequest -Uri $env:LLVM_URL -OutFile "$env:DOWNLOAD_DIR\$env:LLVM_ARCHIVE"
+
+        - name: Install 7zip
+          shell: pwsh
+          run: choco install 7zip -y
+
+        - name: Extract LLVM archive
+          shell: pwsh
+          run: |
+            cd "$env:DOWNLOAD_DIR"
+            7z x $env:LLVM_ARCHIVE
+
+        - name: Prepare installation directory
+          shell: pwsh
+          run: |
+            New-Item -Path "$env:LLVM_DIR" -ItemType Directory -Force
+            
+        - id: install-llvm
+          shell: pwsh
+          name: Install LLVM
+          run: |
+            $extractedFolder = Get-ChildItem -Path "$env:DOWNLOAD_DIR" -Directory | Where-Object { $_.Name -like "clang+llvm*" } | Select-Object -First 1
+            Write-Host "Extracted folder path: $($extractedFolder.FullName)"
+            
+            # Copy files to installation directory
+            Move-Item -Path "$($extractedFolder.FullName)\*" -Destination "$env:LLVM_DIR" -Force
+            
+            # Set environment variables
+            echo "LLVM_PATH=$env:LLVM_DIR" >> $env:GITHUB_ENV
+            echo "$env:LLVM_DIR\bin" >> $env:GITHUB_PATH
+            echo "llvm_path=$env:LLVM_DIR" >> $env:GITHUB_OUTPUT
+
+        - name: Verify LLVM installation
+          shell: pwsh
+          run: |
+            Write-Host "LLVM installation verification:"
+            if (Test-Path "$env:LLVM_DIR\bin") {
+              Write-Host "LLVM bin directory exists"
+              Write-Host "Contents of LLVM bin directory:"
+              Get-ChildItem -Path "$env:LLVM_DIR\bin" | Format-Table Name, Length, LastWriteTime
+            } else {
+              Write-Host "LLVM bin directory does not exist!" -ForegroundColor Red
+              exit 1
+            }

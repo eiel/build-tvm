@@ -43,47 +43,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install setuptools wheel numpy
 
-      - name: LLVMをダウンロードしてインストール
-        run: |
-          $llvmVersion = "20.1.0"
-          $llvmUrl = "https://github.com/llvm/llvm-project/releases/download/llvmorg-$llvmVersion/clang+llvm-$llvmVersion-x86_64-pc-windows-msvc.tar.xz"
-          $llvmArchive = "llvm-$llvmVersion.tar.xz"
-          $llvmDir = "D:\lib\LLVM"
-          
-          # ダウンロードディレクトリを作成
-          New-Item -Path "${{ github.workspace }}\llvm-download" -ItemType Directory -Force
-          
-          # LLVMをダウンロード
-          Invoke-WebRequest -Uri $llvmUrl -OutFile "${{ github.workspace }}\llvm-download\$llvmArchive"
-          
-          # 解凍用に7zipをインストール
-          choco install 7zip -y
-          
-          # アーカイブを解凍
-          cd "${{ github.workspace }}\llvm-download"
-          7z x $llvmArchive
-          $extractedFolder = Get-ChildItem -Directory | Where-Object { $_.Name -like "clang+llvm*" } | Select-Object -First 1
-          Write-Host "Extracted folder path: $($extractedFolder.FullName)"
-          
-          # LLVMディレクトリを作成
-          New-Item -Path "$llvmDir" -ItemType Directory -Force
-          
-          # ファイルをコピー
-            Move-Item -Path "$extractedFolder\*" -Destination "$llvmDir" -Force
-          
-          # 環境変数を設定
-            echo "LLVM_PATH=$llvmDir" >> $env:GITHUB_ENV
-            echo "$llvmDir\bin" >> $env:GITHUB_PATH
-
-          # LLVMのインストール確認とbinディレクトリの内容表示
-          Write-Host "LLVM installation verification:"
-          if (Test-Path "C:\Program Files\LLVM\bin") {
-            Write-Host "LLVM bin directory exists"
-            Write-Host "Contents of LLVM bin directory:"
-            Get-ChildItem -Path "C:\Program Files\LLVM\bin" | Format-Table Name, Length, LastWriteTime
-          } else {
-            Write-Host "LLVM bin directory does not exist!" -ForegroundColor Red
-          }
+      - name: Install LLVM
+        uses: ./.github/workflows/install-dev-llvm
+        with:
+          llvm_version: "20.1.0"
       - name: libtvmのソースコードをダウンロード
         uses: actions/checkout@v4
         with:
