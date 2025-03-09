@@ -63,16 +63,17 @@ jobs:
           cd "${{ github.workspace }}\llvm-download"
           7z x $llvmArchive
           $extractedFolder = Get-ChildItem -Directory | Where-Object { $_.Name -like "clang+llvm*" } | Select-Object -First 1
+          Write-Host "Extracted folder path: $($extractedFolder.FullName)"
           
           # LLVMディレクトリを作成
           New-Item -Path "$llvmDir" -ItemType Directory -Force
           
           # ファイルをコピー
-          Copy-Item -Path "$extractedFolder\*" -Destination "$llvmDir" -Recurse -Force
+            Move-Item -Path "$extractedFolder\*" -Destination "$llvmDir" -Force
           
           # 環境変数を設定
-          echo "LLVM_PATH=C:\Program Files\LLVM" >> $env:GITHUB_ENV
-          echo "C:\Program Files\LLVM\bin" >> $env:GITHUB_PATH
+            echo "LLVM_PATH=$llvmDir" >> $env:GITHUB_ENV
+            echo "$llvmDir\bin" >> $env:GITHUB_PATH
 
           # LLVMのインストール確認とbinディレクトリの内容表示
           Write-Host "LLVM installation verification:"
