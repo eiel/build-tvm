@@ -40,6 +40,27 @@ jobs:
           python -m pip install --upgrade pip
           pip install setuptools wheel numpy
 
+      - name: LLVMをインストール
+        run: |
+          choco install llvm --version=15.0.7 -y
+          echo "LLVM_PATH=C:\Program Files\LLVM" >> $env:GITHUB_ENV
+          echo "C:\Program Files\LLVM\bin" >> $env:GITHUB_PATH
+          
+      - name: LLVMのbinディレクトリの内容を確認
+        run: |
+          echo "LLVMのbinディレクトリの内容一覧:"
+          Get-ChildItem -Path "C:\Program Files\LLVM\bin" | Format-Table Name, Length, LastWriteTime
+          
+          echo "`nllvm-configの確認:"
+          if (Test-Path "C:\Program Files\LLVM\bin\llvm-config.exe") {
+            echo "llvm-config.exeが存在します"
+            & "C:\Program Files\LLVM\bin\llvm-config.exe" --version
+          } else {
+            echo "llvm-config.exeが見つかりません"
+            echo "代替ファイルを探しています..."
+            Get-ChildItem -Path "C:\Program Files\LLVM\bin" -Filter "*config*" | Format-Table Name, Length
+          }
+
       - name: libtvmのソースコードをダウンロード
         uses: actions/checkout@v4
         with:
@@ -53,6 +74,7 @@ jobs:
           cd build
           cmake .. `
             -DSUMMARIZE=ON `
+            -DUSE_LLVM="C:\Program Files\LLVM\bin\llvm-config"
 
       - name: libtvmをビルド
         run: |
