@@ -64,8 +64,8 @@ jobs:
           mkdir build
           cd build
           cmake .. `
-            -DSUMMARIZE=ON `
-            -DUSE_LLVM="D:a/lib/LLVM/bin/llvm-config.exe"
+            -DSUMMARIZE=ON
+#            -DUSE_LLVM="D:a/lib/LLVM/bin/llvm-config.exe"
 
       - name: libtvmをビルド
         run: |
