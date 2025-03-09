@@ -45,7 +45,7 @@ jobs:
           $llvmVersion = "20.1.0"
           $llvmUrl = "https://github.com/llvm/llvm-project/releases/download/llvmorg-$llvmVersion/clang+llvm-$llvmVersion-x86_64-pc-windows-msvc.tar.xz"
           $llvmArchive = "llvm-$llvmVersion.tar.xz"
-          $llvmDir = "C:\Program Files\LLVM"
+          $llvmDir = "D:\lib\LLVM"
           
           # ダウンロードディレクトリを作成
           New-Item -Path "${{ github.workspace }}\llvm-download" -ItemType Directory -Force
