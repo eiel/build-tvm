@@ -67,3 +67,6 @@ jobs:
 
       - name: libtvmをビルド
         run: cmake --build build --config Release -- /m
+
+      - name: ccacheのディレクトリ確認
+        run: Get-ChildItem -Path ${{ github.workspace }}\.ccache -Force | Format-Table Name, Length, LastWriteTime
