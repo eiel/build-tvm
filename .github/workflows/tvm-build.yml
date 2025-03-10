@@ -60,10 +60,10 @@ jobs:
           mkdir build
           cd build
           cmake .. `
-            -DSUMMARIZE=ON
+            -G "Visual Studio 16 2019" `
+            -DSUMMARIZE=ON `
+            -DUSE_CCACHE=ON
 #            -DUSE_LLVM="D:a/lib/LLVM/bin/llvm-config.exe"
 
       - name: libtvmをビルド
-        run: |
-          cd build
-          cmake --build . --config Release
+        run: cmake --build build --config Release
