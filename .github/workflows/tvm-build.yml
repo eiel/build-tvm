@@ -35,16 +35,16 @@ jobs:
       - name: ディスクの空き容量を表示
         run: Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name="Used(GB)";Expression={[math]::round($_.Used/1GB,2)}}, @{Name="Free(GB)";Expression={[math]::round($_.Free/1GB,2)}}, @{Name="Total(GB)";Expression={[math]::round($_.Used/1GB + $_.Free/1GB,2)}}
 
-      - name: Pythonの依存関係をインストール
-        run: |
-          python -m pip install --upgrade pip
-          pip install setuptools wheel numpy
+      # - name: Pythonの依存関係をインストール
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install setuptools wheel numpy
 
-      - name: Install LLVM
-        uses: ./.github/actions/setup-llvm-dev
-        id: setup-llvm
-        with:
-            llvm-version: "20.1.0"
+      # - name: Install LLVM
+      #  uses: ./.github/actions/setup-llvm-dev
+      #  id: setup-llvm
+      #  with:
+      #      llvm-version: "20.1.0"
 
       - name: libtvmのソースコードをダウンロード
         uses: actions/checkout@v4
@@ -60,8 +60,14 @@ jobs:
           cmake .. `
             -G "Visual Studio 16 2019" `
             -DSUMMARIZE=ON `
-            -DUSE_CCACHE=ON
+            -DUSE_CCACHE=ON `
+            --target runtime
 #            -DUSE_LLVM="D:a/lib/LLVM/bin/llvm-config.exe"
 
       - name: libtvmをビルド
         run: cmake --build build --config Release -- /m
+
+      - name: cmakeの状態確認
+        run: |
+          ccache --show-stats
+          ccacche --zero-stats
