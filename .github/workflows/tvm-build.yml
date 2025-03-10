@@ -61,11 +61,10 @@ jobs:
             -G "Visual Studio 16 2019" `
             -DSUMMARIZE=ON `
             -DUSE_CCACHE=ON `
-            --target runtime
 #            -DUSE_LLVM="D:a/lib/LLVM/bin/llvm-config.exe"
 
       - name: libtvmをビルド
-        run: cmake --build build --config Release -- /m
+        run: cmake --build build --config Release --target runtime -- /m
 
       - name: cmakeの状態確認
         run: |
