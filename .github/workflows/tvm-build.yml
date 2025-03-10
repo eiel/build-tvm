@@ -69,4 +69,4 @@ jobs:
       - name: cmakeの状態確認
         run: |
           ccache --show-stats
-          ccacche --zero-stats
+          ccache --zero-stats
