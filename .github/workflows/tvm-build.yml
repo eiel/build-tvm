@@ -66,4 +66,4 @@ jobs:
 #            -DUSE_LLVM="D:a/lib/LLVM/bin/llvm-config.exe"
 
       - name: libtvmをビルド
-        run: cmake --build build --config Release
+        run: cmake --build build --config Release -- /m
