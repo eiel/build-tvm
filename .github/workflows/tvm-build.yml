@@ -31,14 +31,9 @@ jobs:
         run: |
           choco install ccache
 
-      - name: ccacheのキャッシュを復元
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.CCACHE_DIR }}
-          key: ${{ runner.os }}-ccache-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-ccache-
-      
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+
       - name: ディスクの空き容量を表示
         run: Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{Name="Used(GB)";Expression={[math]::round($_.Used/1GB,2)}}, @{Name="Free(GB)";Expression={[math]::round($_.Free/1GB,2)}}, @{Name="Total(GB)";Expression={[math]::round($_.Used/1GB + $_.Free/1GB,2)}}
 
